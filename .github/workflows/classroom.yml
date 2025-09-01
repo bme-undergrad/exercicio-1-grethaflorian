@@ -20,7 +20,7 @@ jobs:
         test-name: test1
         setup-command: sudo apt update && sudo apt install octave
         command: octave --eval "tr = exercicio1(@(t) sqrt(2*9.81*13.5)*tanh(sqrt(2*9.81*13.5)/(2*3.75)*t)-1,
-          @(t) (9.81*13.5/3.75*sech(sqrt(2*9.81*13.5)/(2*3.75)*t)^2-1), 10); assert(tr,
+          @(t) (9.81*13.5/3.75*sech(sqrt(2*9.81*13.5)/(2*3.75)*t)^2), 0); assert(tr,
           0.0283, 0.01)"
         timeout: 10
         max-score: 1
@@ -31,7 +31,7 @@ jobs:
         test-name: test2
         setup-command: sudo apt update && sudo apt install octave
         command: octave --eval "tr = exercicio1(@(t) sqrt(2*9.81*13.5)*tanh(sqrt(2*9.81*13.5)/(2*3.75)*t)-5,
-          @(t) (9.81*13.5/3.75*sech(sqrt(2*9.81*13.5)/(2*3.75)*t)^2-5), 10); assert(tr,
+          @(t) (9.81*13.5/3.75*sech(sqrt(2*9.81*13.5)/(2*3.75)*t)^2), 0); assert(tr,
           0.1463, 0.01)"
         timeout: 10
         max-score: 1
@@ -42,7 +42,7 @@ jobs:
         test-name: test3
         setup-command: sudo apt update && sudo apt install octave
         command: octave --eval "tr = exercicio1(@(t) sqrt(2*9.81*13.5)*tanh(sqrt(2*9.81*13.5)/(2*3.75)*t)-5,
-          @(t) (9.81*13.5/3.75*sech(sqrt(2*9.81*13.5)/(2*3.75)*t)^2-10), 10); assert(tr,
+          @(t) (9.81*13.5/3.75*sech(sqrt(2*9.81*13.5)/(2*3.75)*t)^2), 0); assert(tr,
           0.4680, 0.01)"
         timeout: 10
         max-score: 1
