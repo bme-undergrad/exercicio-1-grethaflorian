@@ -43,7 +43,7 @@ jobs:
         setup-command: sudo apt update && sudo apt install octave
         command: octave --eval "tr = exercicio1(@(t) sqrt(2*9.81*13.5)*tanh(sqrt(2*9.81*13.5)/(2*3.75)*t)-10,
           @(t) (9.81*13.5/3.75*sech(sqrt(2*9.81*13.5)/(2*3.75)*t)^2), 0); assert(tr,
-          0.4680, 0.01)"
+          0.330, 0.01)"
         timeout: 10
         max-score: 1
     - name: Autograding Reporter
