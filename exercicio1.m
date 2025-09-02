@@ -1,59 +1,62 @@
-function t = exercicio1(func, x0)
+% =======================
+% exercicio1.m
+% Método: Newton
+% Saída: tempos t para v* = 1, 5 e 12.5 m/s
+% Critério: erro relativo < 1% ; máx 20 iterações
+% =======================
 
-% nao alterar: inicio
-es = 1;       % tolerancia EM PORCENTAGEM (1%)
-imax = 20;    % maximo de iteracoes
-% nao alterar: fim
+clear all; clc;
 
-% ===== Metodo de NEWTON (derivada NUMERICA central) =====
-tvals = zeros(imax, 1);
-erro  = zeros(imax, 1);
+% ---- PARAMETROS ----
+g = 9.81;     % [m/s^2]
+H = 2.0;      % [m]  
+L = 3.0;      % [m]  
 
-tvals(1) = x0;
-convergiu = false;
+A = sqrt(2*g*H);
+B = sqrt(2*g*H)/(2*L);
 
-for ii = 1:imax-1
-  % f(t_k)
-  f0 = func(tvals(ii));
+% ---- ALVOS DE VELOCIDADE ----
+v_targets = [1, 5, 12.5];   % [m/s]
 
-  % f'(t_k) por diferença central: (f(x+h)-f(x-h))/(2h)
-  h  = max(1e-6, 1e-6*max(1, abs(tvals(ii))));
-  fp = (func(tvals(ii) + h) - func(tvals(ii) - h)) / (2*h);
+% ---- CHUTE INICIAL (tempo) ----
+x0 = 0;   % t0 = 0 s
 
-  % proteção contra derivada zero/NaN/Inf
-  if fp == 0 || ~isfinite(fp)
-    % retorna melhor estimativa disponivel
-    t = tvals(ii);
-    return
-  endif
+% ---- LOOP PRINCIPAL: resolve para cada v* ----
+for kk = 1:length(v_targets)
+  v_star = v_targets(kk);
 
-  % passo de Newton
-  tvals(ii+1) = tvals(ii) - f0/fp;
+  % f(t) = v(t) - v_star ; v(t) = A*tanh(B*t)
+  f   = @(t) (A*tanh(B*t) - v_star);
+  f_d = @(t) (A*B ./ (cosh(B*t).^2));   % derivada analítica
 
-  % erro relativo EM %  (compatível com es = 1)
-  if tvals(ii+1) ~= 0
-    erro(ii+1) = abs((tvals(ii+1) - tvals(ii)) / tvals(ii+1)) * 100;
-  else
-    erro(ii+1) = Inf;
-  endif
+  imax = 20;   % máximo de iterações
+  es   = 1;    % erro relativo admissível (em %)
+  t    = zeros(imax,1);
+  t(1) = x0;
+  erro = zeros(imax,1);
 
-  % criterio de parada
-  if erro(ii+1) < es
-    t = tvals(ii+1);   % estimativa convergida
-    convergiu = true;
-    break
-  endif
+  for ii = 1:imax-1
+    if ii ~= 1
+      denom    = max(1e-12, abs(t(ii)));
+      erro(ii) = abs((t(ii) - t(ii-1)) / denom) * 100;  % em %
+      if erro(ii) < es
+        break
+      endif
+    endif
+
+    den = f_d(t(ii));
+    if abs(den) < 1e-12
+      break
+    endif
+
+    t(ii+1) = t(ii) - f(t(ii))/den;  % Newton
+  endfor
+
+  % Resultado
+  t_final = t(ii);
+  ea = erro(ii);
+  fprintf('v* = %5.2f m/s  ->  t = %.6f s  (iter = %d, ea ≈ %.3f%%)\n', ...
+          v_star, t_final, ii, ea);
 endfor
 
-% se nao convergiu em imax-1 iteracoes, devolve a ultima estimativa calculada
-if ~convergiu
-  lastidx = find(tvals, 1, "last");
-  if isempty(lastidx)
-    t = x0;                 % fallback
-  else
-    t = tvals(lastidx);
-  endif
-endif
-
-endfunction
 
