@@ -41,7 +41,7 @@ jobs:
       with:
         test-name: test3
         setup-command: sudo apt update && sudo apt install octave
-        command: octave --eval "tr = exercicio1(@(t) sqrt(2*9.81*13.5)*tanh(sqrt(2*9.81*13.5)/(2*3.75)*t)-5,
+        command: octave --eval "tr = exercicio1(@(t) sqrt(2*9.81*13.5)*tanh(sqrt(2*9.81*13.5)/(2*3.75)*t)-10,
           @(t) (9.81*13.5/3.75*sech(sqrt(2*9.81*13.5)/(2*3.75)*t)^2), 0); assert(tr,
           0.4680, 0.01)"
         timeout: 10
